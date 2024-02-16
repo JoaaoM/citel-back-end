@@ -1,0 +1,10 @@
+services:
+  db:
+    hostname: mysqlserver
+    image: mysql:8.0.33
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: meudb
