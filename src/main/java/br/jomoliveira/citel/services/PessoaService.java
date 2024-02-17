@@ -1,8 +1,6 @@
 package br.jomoliveira.citel.services;
 
-import br.jomoliveira.citel.dtos.CandidatosPorEstadoDTO;
-import br.jomoliveira.citel.dtos.ImcMedioPorFaixaEtariaDTO;
-import br.jomoliveira.citel.dtos.PessoaDTO;
+import br.jomoliveira.citel.dtos.*;
 import br.jomoliveira.citel.models.Pessoa;
 import br.jomoliveira.citel.repositories.PessoaRepository;
 import org.springframework.stereotype.Service;
@@ -61,6 +59,7 @@ public class PessoaService {
         }
     }
 
+    public List<DoadoresPorReceptorDTO> getDoadores () {return repository.calcularQuantidadeDePossiveisDoadoresParaCadaTipoSanguineo();}
     public List<CandidatosPorEstadoDTO> getAll() {
         return repository.candidatosPorEstado();
     }
@@ -68,4 +67,6 @@ public class PessoaService {
     public List<ImcMedioPorFaixaEtariaDTO> getAlldsada(){
         return repository.calcularIMCMedioPorFaixaIdade();
     }
+
+    public List<MediaParaCadaTipoSanguineoDTO> getMedia() { return repository.calcularMediaDeIdadeParaCadaTipoSanguineo();}
 }

@@ -1,7 +1,9 @@
 package br.jomoliveira.citel.repositories;
 
 import br.jomoliveira.citel.dtos.CandidatosPorEstadoDTO;
+import br.jomoliveira.citel.dtos.DoadoresPorReceptorDTO;
 import br.jomoliveira.citel.dtos.ImcMedioPorFaixaEtariaDTO;
+import br.jomoliveira.citel.dtos.MediaParaCadaTipoSanguineoDTO;
 import br.jomoliveira.citel.models.Pessoa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,8 +11,8 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
-    @Query(value="SELECT NEW br.jomoliveira.citel.dtos.CandidatosPorEstadoDTO(p.endereco.estado, count(p)) FROM Pessoa p GROUP BY p.endereco.estado")
-    List<CandidatosPorEstadoDTO> candidatosPorEstado ();
+    @Query(value = "SELECT NEW br.jomoliveira.citel.dtos.CandidatosPorEstadoDTO(p.endereco.estado, count(p)) FROM Pessoa p GROUP BY p.endereco.estado")
+    List<CandidatosPorEstadoDTO> candidatosPorEstado();
 
     @Query("SELECT " +
             "NEW br.jomoliveira.citel.dtos.ImcMedioPorFaixaEtariaDTO(" +
@@ -34,4 +36,16 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
             "WHEN YEAR(CURRENT_DATE()) - YEAR(p.dataNascimento) BETWEEN 41 AND 50 THEN '61-70' " +
             "ELSE '71+' END ")
     List<ImcMedioPorFaixaEtariaDTO> calcularIMCMedioPorFaixaIdade();
+
+
+    @Query(value = "SELECT NEW br.jomoliveira.citel.dtos.MediaParaCadaTipoSanguineoDTO(p.tipoSanguineo.sorotipagem, AVG(YEAR(CURRENT_DATE()) - YEAR(p.dataNascimento))) FROM Pessoa p GROUP BY p.tipoSanguineo.sorotipagem")
+    List<MediaParaCadaTipoSanguineoDTO> calcularMediaDeIdadeParaCadaTipoSanguineo();
+
+    @Query("SELECT NEW br.jomoliveira.citel.dtos.DoadoresPorReceptorDTO(t.sorotipagem, COUNT(p)) " +
+            "FROM Doacao d " +
+            "JOIN d.tipoSanguineoReceptor t " +
+            "JOIN Pessoa p ON d.tipoSanguineoDoador = p.tipoSanguineo " +
+            "GROUP BY t.sorotipagem")
+    List<DoadoresPorReceptorDTO> calcularQuantidadeDePossiveisDoadoresParaCadaTipoSanguineo();
 }
+

@@ -1,8 +1,6 @@
 package br.jomoliveira.citel.controllers;
 
-import br.jomoliveira.citel.dtos.CandidatosPorEstadoDTO;
-import br.jomoliveira.citel.dtos.ImcMedioPorFaixaEtariaDTO;
-import br.jomoliveira.citel.dtos.PessoaDTO;
+import br.jomoliveira.citel.dtos.*;
 import br.jomoliveira.citel.services.PessoaService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
@@ -44,6 +42,10 @@ public class BancoDeSangueController {
         return pessoaService.getAlldsada();
     }
 
+    @GetMapping(path = "doadores")
+    public List<DoadoresPorReceptorDTO> doadores () {return pessoaService.getDoadores();}
+    @GetMapping(path = "media")
+    public List<MediaParaCadaTipoSanguineoDTO> mediaParaCadaTipoSanguineoDTOList () {return pessoaService.getMedia();}
     private List<PessoaDTO> _mapearJsonParaPessoaDTO(String json) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         return Arrays.asList(mapper.readValue(json, PessoaDTO[].class));
