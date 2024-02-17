@@ -1,9 +1,6 @@
 package br.jomoliveira.citel.repositories;
 
-import br.jomoliveira.citel.dtos.CandidatosPorEstadoDTO;
-import br.jomoliveira.citel.dtos.DoadoresPorReceptorDTO;
-import br.jomoliveira.citel.dtos.ImcMedioPorFaixaEtariaDTO;
-import br.jomoliveira.citel.dtos.MediaParaCadaTipoSanguineoDTO;
+import br.jomoliveira.citel.dtos.*;
 import br.jomoliveira.citel.models.Pessoa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -47,5 +44,13 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
             "JOIN Pessoa p ON d.tipoSanguineoDoador = p.tipoSanguineo " +
             "GROUP BY t.sorotipagem")
     List<DoadoresPorReceptorDTO> calcularQuantidadeDePossiveisDoadoresParaCadaTipoSanguineo();
-}
 
+    @Query("SELECT NEW br.jomoliveira.citel.dtos.PercentualEntreHomensEMulheresDTO(p.sexo, " +
+            "COUNT(p), " +
+            "SUM(CASE WHEN (p.peso / (p.altura * p.altura)) > 30 THEN 1 ELSE 0 END), " +
+            "CAST(SUM(CASE WHEN (p.peso / (p.altura * p.altura)) > 30 THEN 1 ELSE 0 END) / COUNT(*) * 100 AS DOUBLE)) " +
+            "FROM Pessoa p GROUP BY p.sexo")
+    List<PercentualEntreHomensEMulheresDTO> calcularObesidadePorSexo();
+
+
+}

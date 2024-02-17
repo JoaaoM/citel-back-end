@@ -46,6 +46,11 @@ public class BancoDeSangueController {
     public List<DoadoresPorReceptorDTO> doadores () {return pessoaService.getDoadores();}
     @GetMapping(path = "media")
     public List<MediaParaCadaTipoSanguineoDTO> mediaParaCadaTipoSanguineoDTOList () {return pessoaService.getMedia();}
+
+    @GetMapping(path = "percentual")
+    public List<PercentualEntreHomensEMulheresDTO> percentualEntreHomensEMulheresDTOS () {
+        return pessoaService.getPercentual();
+    }
     private List<PessoaDTO> _mapearJsonParaPessoaDTO(String json) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         return Arrays.asList(mapper.readValue(json, PessoaDTO[].class));

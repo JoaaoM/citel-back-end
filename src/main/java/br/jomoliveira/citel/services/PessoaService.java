@@ -59,6 +59,8 @@ public class PessoaService {
         }
     }
 
+    public List<PercentualEntreHomensEMulheresDTO> getPercentual () {return repository.calcularObesidadePorSexo();    }
+
     public List<DoadoresPorReceptorDTO> getDoadores () {return repository.calcularQuantidadeDePossiveisDoadoresParaCadaTipoSanguineo();}
     public List<CandidatosPorEstadoDTO> getAll() {
         return repository.candidatosPorEstado();
