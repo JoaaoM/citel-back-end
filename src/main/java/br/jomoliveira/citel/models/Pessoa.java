@@ -57,7 +57,11 @@ public class Pessoa {
     @JoinColumn(name = "ID_TELEFONE")
     private Telefone telefone;
 
-    public Pessoa(String nome, String cpf, String rg, Date dataNascimento, String sexo, String mae, String pai, Float altura, Integer peso, TipoSanguineo tipoSanguineo, Endereco endereco, Telefone telefone) {
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="ID_IMPORTACAO")
+    private Importacao importacao;
+
+    public Pessoa(String nome, String cpf, String rg, Date dataNascimento, String sexo, String mae, String pai, Float altura, Integer peso, TipoSanguineo tipoSanguineo, Endereco endereco, Telefone telefone, Importacao importacao) {
         this.nome = nome;
         this.cpf = cpf;
         this.rg = rg;
@@ -70,6 +74,7 @@ public class Pessoa {
         this.tipoSanguineo = tipoSanguineo;
         this.endereco = endereco;
         this.telefone = telefone;
+        this.importacao = importacao;
     }
     public Pessoa(){}
 }
