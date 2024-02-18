@@ -1,53 +1,30 @@
 package br.jomoliveira.citel.controllers;
 
 import br.jomoliveira.citel.dtos.*;
-import br.jomoliveira.citel.services.ImportacaoService;
 import br.jomoliveira.citel.services.PessoaService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.transaction.Transactional;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/pessoas")
 public class PessoaController {
     private final PessoaService pessoaService;
-    private final ImportacaoService importacaoService;
-    public PessoaController(PessoaService pessoaService, ImportacaoService importacaoService) {
+    public PessoaController(PessoaService pessoaService) {
         this.pessoaService = pessoaService;
-        this.importacaoService = importacaoService;
     }
-    @PostMapping(path = "/importacao")
-    @Transactional
-    public ResponseEntity<String> importarPessoas(@RequestParam("jsonFile") MultipartFile file) {
-        try {
-            String json = new String(file.getBytes());
-            importacaoService.salvar(file);
-            pessoaService.salvar(_mapearJsonParaPessoaDTO(json), file.getName());
-            return ResponseEntity.status(HttpStatus.CREATED).body("Pessoas importadas com sucesso.");
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao importar pessoas.");
-        }
-    }
-    @GetMapping(path = "/candidatos-por-estado")
-    public List<CandidatosPorEstadoDTO> obterCandidatosPorEstado () {return pessoaService.obterCandidatosPorEstado();}
-    @GetMapping(path = "/imc-medio-por-faixa-etaria")
-    public List<ImcMedioPorFaixaEtariaDTO> obterImcMedioPorFaixaEtaria(){return pessoaService.obterImcMedioPorFaixaEtaria();}
-    @GetMapping(path = "/doadores-por-receptor")
-    public List<DoadoresPorReceptorDTO> obterDoadoresPorReceptor () {return pessoaService.obterDoadoresPorReceptor();}
-    @GetMapping(path = "/media-por-tipo-sanguineo")
-    public List<MediaParaCadaTipoSanguineoDTO> obterMediaPorTipoSanguineo () {return pessoaService.obterMediaPorTipoSanguineo();}
-    @GetMapping(path = "/obesidade-por-sexo")
-    public List<ObesidadePorSexoDTO> obterObesidadePorSexo () {return pessoaService.obterObesidadePorSexo();}
-    private List<PessoaDTO> _mapearJsonParaPessoaDTO(String json) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        return Arrays.asList(mapper.readValue(json, PessoaDTO[].class));
-    }
+    @GetMapping(path = "/candidatos-por-estado/{id}")
+    public List<CandidatosPorEstadoDTO> obterCandidatosPorEstado (@PathVariable Long id) {return pessoaService.obterCandidatosPorEstado(id);}
+    @GetMapping(path = "/imc-medio-por-faixa-etaria/{id}")
+    public List<ImcMedioPorFaixaEtariaDTO> obterImcMedioPorFaixaEtaria(@PathVariable Long id){return pessoaService.obterImcMedioPorFaixaEtaria(id);}
+    @GetMapping(path = "/doadores-por-receptor/{id}")
+    public List<DoadoresPorReceptorDTO> obterDoadoresPorReceptor (@PathVariable Long id) {return pessoaService.obterDoadoresPorReceptor(id);}
+        @GetMapping(path = "/media-por-tipo-sanguineo/{id}")
+    public List<MediaParaCadaTipoSanguineoDTO> obterMediaPorTipoSanguineo (@PathVariable Long id) {return pessoaService.obterMediaPorTipoSanguineo(id);}
+    @GetMapping(path = "/obesidade-por-sexo/{id}")
+    public List<ObesidadePorSexoDTO> obterObesidadePorSexo (@PathVariable Long id) {return pessoaService.obterObesidadePorSexo(id);}
 
 }

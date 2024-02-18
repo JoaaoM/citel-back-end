@@ -3,10 +3,13 @@ package br.jomoliveira.citel.services;
 import br.jomoliveira.citel.dtos.*;
 import br.jomoliveira.citel.models.Pessoa;
 import br.jomoliveira.citel.repositories.PessoaRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -24,15 +27,21 @@ public class PessoaService {
         this.tipoSanguineoService = tipoSanguineoService;
         this.importacaoService = importacaoService;
     }
-    public void salvar(List<PessoaDTO> listPessoaDTO, String nomeArquivo) {
+
+    private List<PessoaDTO> _mapearJsonParaPessoaDTO(String json) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        return Arrays.asList(mapper.readValue(json, PessoaDTO[].class));
+    }
+    public void salvar(String json, Long idImportacao) throws IOException {
+        var listPessoaDTO = _mapearJsonParaPessoaDTO(json);
         listPessoaDTO.forEach(pessoaDTO -> {
-            salvar(converterParaEntidade(pessoaDTO, nomeArquivo));
+            salvar(converterParaEntidade(pessoaDTO, idImportacao));
         });
     }
     public void salvar(Pessoa pessoa){
         repository.save(pessoa);
     }
-    public Pessoa converterParaEntidade(PessoaDTO pessoaDTO, String nomeArquivo) {
+    public Pessoa converterParaEntidade(PessoaDTO pessoaDTO, Long idImportacao) {
         return new Pessoa(
                 pessoaDTO.nome(),
                 pessoaDTO.cpf(),
@@ -46,7 +55,7 @@ public class PessoaService {
                 tipoSanguineoService.findTipoSanguineo(pessoaDTO.tipo_sanguineo()),
                 enderecoService.converterParaEntidade(pessoaDTO),
                 telefoneService.converterParaEntidade(pessoaDTO),
-                importacaoService.findNomeArquivo(nomeArquivo)
+                importacaoService.findById(idImportacao)
         );
     }
     private Date _converterStringParaData(String data){
@@ -58,11 +67,9 @@ public class PessoaService {
             return null;
         }
     }
-    public List<ObesidadePorSexoDTO> obterObesidadePorSexo () {return repository.calcularObesidadePorSexo();    }
-    public List<DoadoresPorReceptorDTO> obterDoadoresPorReceptor () {return repository.calcularQuantidadeDePossiveisDoadoresParaCadaTipoSanguineo();}
-    public List<CandidatosPorEstadoDTO> obterCandidatosPorEstado() {
-        return repository.candidatosPorEstado();
-    }
-    public List<ImcMedioPorFaixaEtariaDTO> obterImcMedioPorFaixaEtaria(){return repository.calcularIMCMedioPorFaixaIdade();}
-    public List<MediaParaCadaTipoSanguineoDTO> obterMediaPorTipoSanguineo() { return repository.calcularMediaDeIdadeParaCadaTipoSanguineo();}
+    public List<ObesidadePorSexoDTO> obterObesidadePorSexo (Long id) {return repository.calcularObesidadePorSexo(id);    }
+    public List<DoadoresPorReceptorDTO> obterDoadoresPorReceptor (Long id) {return repository.calcularQuantidadeDePossiveisDoadoresParaCadaTipoSanguineo(id);}
+    public List<CandidatosPorEstadoDTO> obterCandidatosPorEstado(Long id) {return repository.candidatosPorEstado(id);}
+    public List<ImcMedioPorFaixaEtariaDTO> obterImcMedioPorFaixaEtaria(Long id){return repository.calcularIMCMedioPorFaixaIdade(id);}
+    public List<MediaParaCadaTipoSanguineoDTO> obterMediaPorTipoSanguineo(Long id) { return repository.calcularMediaDeIdadeParaCadaTipoSanguineo(id);}
 }
