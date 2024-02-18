@@ -16,21 +16,23 @@ public class PessoaService {
     private final TelefoneService telefoneService;
     private final EnderecoService enderecoService;
     private final TipoSanguineoService tipoSanguineoService;
-    public PessoaService(PessoaRepository repository, TelefoneService telefoneService, EnderecoService enderecoService, TipoSanguineoService tipoSanguineoService) {
+    private final ImportacaoService importacaoService;
+    public PessoaService(PessoaRepository repository, TelefoneService telefoneService, EnderecoService enderecoService, TipoSanguineoService tipoSanguineoService, ImportacaoService importacaoService) {
         this.repository = repository;
         this.telefoneService = telefoneService;
         this.enderecoService = enderecoService;
         this.tipoSanguineoService = tipoSanguineoService;
+        this.importacaoService = importacaoService;
     }
-    public void salvar(List<PessoaDTO> listPessoaDTO) {
+    public void salvar(List<PessoaDTO> listPessoaDTO, String nomeArquivo) {
         listPessoaDTO.forEach(pessoaDTO -> {
-            salvar(converterParaEntidade(pessoaDTO));
+            salvar(converterParaEntidade(pessoaDTO, nomeArquivo));
         });
     }
     public void salvar(Pessoa pessoa){
         repository.save(pessoa);
     }
-    public Pessoa converterParaEntidade(PessoaDTO pessoaDTO) {
+    public Pessoa converterParaEntidade(PessoaDTO pessoaDTO, String nomeArquivo) {
         return new Pessoa(
                 pessoaDTO.nome(),
                 pessoaDTO.cpf(),
@@ -43,7 +45,8 @@ public class PessoaService {
                 pessoaDTO.peso(),
                 tipoSanguineoService.findTipoSanguineo(pessoaDTO.tipo_sanguineo()),
                 enderecoService.converterParaEntidade(pessoaDTO),
-                telefoneService.converterParaEntidade(pessoaDTO)
+                telefoneService.converterParaEntidade(pessoaDTO),
+                importacaoService.findNomeArquivo(nomeArquivo)
         );
     }
     private Date _converterStringParaData(String data){
