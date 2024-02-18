@@ -22,13 +22,11 @@ public class PessoaService {
         this.enderecoService = enderecoService;
         this.tipoSanguineoService = tipoSanguineoService;
     }
-
     public void salvar(List<PessoaDTO> listPessoaDTO) {
         listPessoaDTO.forEach(pessoaDTO -> {
             salvar(converterParaEntidade(pessoaDTO));
         });
     }
-
     public void salvar(Pessoa pessoa){
         repository.save(pessoa);
     }
@@ -48,7 +46,6 @@ public class PessoaService {
                 telefoneService.converterParaEntidade(pessoaDTO)
         );
     }
-
     private Date _converterStringParaData(String data){
         try{
             SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
@@ -58,17 +55,11 @@ public class PessoaService {
             return null;
         }
     }
-
-    public List<PercentualEntreHomensEMulheresDTO> getPercentual () {return repository.calcularObesidadePorSexo();    }
-
-    public List<DoadoresPorReceptorDTO> getDoadores () {return repository.calcularQuantidadeDePossiveisDoadoresParaCadaTipoSanguineo();}
-    public List<CandidatosPorEstadoDTO> getAll() {
+    public List<ObesidadePorSexoDTO> obterObesidadePorSexo () {return repository.calcularObesidadePorSexo();    }
+    public List<DoadoresPorReceptorDTO> obterDoadoresPorReceptor () {return repository.calcularQuantidadeDePossiveisDoadoresParaCadaTipoSanguineo();}
+    public List<CandidatosPorEstadoDTO> obterCandidatosPorEstado() {
         return repository.candidatosPorEstado();
     }
-
-    public List<ImcMedioPorFaixaEtariaDTO> getAlldsada(){
-        return repository.calcularIMCMedioPorFaixaIdade();
-    }
-
-    public List<MediaParaCadaTipoSanguineoDTO> getMedia() { return repository.calcularMediaDeIdadeParaCadaTipoSanguineo();}
+    public List<ImcMedioPorFaixaEtariaDTO> obterImcMedioPorFaixaEtaria(){return repository.calcularIMCMedioPorFaixaIdade();}
+    public List<MediaParaCadaTipoSanguineoDTO> obterMediaPorTipoSanguineo() { return repository.calcularMediaDeIdadeParaCadaTipoSanguineo();}
 }

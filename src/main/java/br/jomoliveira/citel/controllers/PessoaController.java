@@ -14,13 +14,13 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/importar")
-public class BancoDeSangueController {
+@RequestMapping("/api/pessoas")
+public class PessoaController {
     private final PessoaService pessoaService;
-    public BancoDeSangueController(PessoaService pessoaService) {
+    public PessoaController(PessoaService pessoaService) {
         this.pessoaService = pessoaService;
     }
-    @PostMapping
+    @PostMapping(path = "importacao")
     @Transactional
     public ResponseEntity<String> importarPessoas(@RequestParam("jsonFile") MultipartFile file) {
         try {
@@ -31,26 +31,16 @@ public class BancoDeSangueController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao importar pessoas.");
         }
     }
-
-    @GetMapping
-    public List<CandidatosPorEstadoDTO> candidatosPorEstado () {
-        return pessoaService.getAll();
-    }
-
-    @GetMapping(path = "imc")
-    public List<ImcMedioPorFaixaEtariaDTO> imcMedioPorFaixaEtariaDTOList(){
-        return pessoaService.getAlldsada();
-    }
-
-    @GetMapping(path = "doadores")
-    public List<DoadoresPorReceptorDTO> doadores () {return pessoaService.getDoadores();}
-    @GetMapping(path = "media")
-    public List<MediaParaCadaTipoSanguineoDTO> mediaParaCadaTipoSanguineoDTOList () {return pessoaService.getMedia();}
-
-    @GetMapping(path = "percentual")
-    public List<PercentualEntreHomensEMulheresDTO> percentualEntreHomensEMulheresDTOS () {
-        return pessoaService.getPercentual();
-    }
+    @GetMapping(path = "/candidatos-por-estado")
+    public List<CandidatosPorEstadoDTO> obterCandidatosPorEstado () {return pessoaService.obterCandidatosPorEstado();}
+    @GetMapping(path = "/imc-medio-por-faixa-etaria")
+    public List<ImcMedioPorFaixaEtariaDTO> obterImcMedioPorFaixaEtaria(){return pessoaService.obterImcMedioPorFaixaEtaria();}
+    @GetMapping(path = "/doadores-por-receptor")
+    public List<DoadoresPorReceptorDTO> obterDoadoresPorReceptor () {return pessoaService.obterDoadoresPorReceptor();}
+    @GetMapping(path = "/media-por-tipo-sanguineo")
+    public List<MediaParaCadaTipoSanguineoDTO> obterMediaPorTipoSanguineo () {return pessoaService.obterMediaPorTipoSanguineo();}
+    @GetMapping(path = "/obesidade-por-sexo")
+    public List<ObesidadePorSexoDTO> obterObesidadePorSexo () {return pessoaService.obterObesidadePorSexo();}
     private List<PessoaDTO> _mapearJsonParaPessoaDTO(String json) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         return Arrays.asList(mapper.readValue(json, PessoaDTO[].class));

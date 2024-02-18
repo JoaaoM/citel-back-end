@@ -45,12 +45,12 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
             "GROUP BY t.sorotipagem")
     List<DoadoresPorReceptorDTO> calcularQuantidadeDePossiveisDoadoresParaCadaTipoSanguineo();
 
-    @Query("SELECT NEW br.jomoliveira.citel.dtos.PercentualEntreHomensEMulheresDTO(p.sexo, " +
+    @Query("SELECT NEW br.jomoliveira.citel.dtos.ObesidadePorSexoDTO(p.sexo, " +
             "COUNT(p), " +
             "SUM(CASE WHEN (p.peso / (p.altura * p.altura)) > 30 THEN 1 ELSE 0 END), " +
             "CAST(SUM(CASE WHEN (p.peso / (p.altura * p.altura)) > 30 THEN 1 ELSE 0 END) / COUNT(*) * 100 AS DOUBLE)) " +
             "FROM Pessoa p GROUP BY p.sexo")
-    List<PercentualEntreHomensEMulheresDTO> calcularObesidadePorSexo();
+    List<ObesidadePorSexoDTO> calcularObesidadePorSexo();
 
 
 }
