@@ -51,11 +51,11 @@ Antes de começar, as seguintes ferramentas devem estar instaladas em sua máqui
 
 ## Como Rodar o Aplicativo
 
-Antes de executar o front-end é necessário executar o [banck-end](https://github.com/JoaaoM/citel-back-end).Siga estas etapas para executar o aplicativo em sua máquina local:
+Antes de executar o front-end é necessário executar o [banck-end](https://github.com/JoaaoM/citel-back-end). Siga estas etapas para executar o aplicativo em sua máquina local:
 
 1. Clone este repositório: `git clone https://github.com/JoaaoM/citel-front-end`
 2. Abra o Docker Desktop
-3. Entre no diretório do projeto: `cd citel-front-end`a
+3. Entre no diretório do projeto: `cd citel-front-end`
 4. Rode o comando: `docker-compose up -d`
 5. Rode o comando para parar docker: `docker-compose down`
 
