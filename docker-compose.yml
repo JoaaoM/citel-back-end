@@ -11,6 +11,7 @@ services:
       - db
   db:
     hostname: mysqlserver
+    container_name: banco
     image: mysql:8.0.33
     restart: always
     ports:
