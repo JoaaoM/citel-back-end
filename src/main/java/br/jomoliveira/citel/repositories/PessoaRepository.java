@@ -47,8 +47,10 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
     @Query("SELECT NEW br.jomoliveira.citel.dtos.DoadoresPorReceptorDTO(t.sorotipagem, COUNT(p)) " +
             "FROM Doacao d " +
             "JOIN d.tipoSanguineoReceptor t " +
-            "JOIN Pessoa p ON d.tipoSanguineoDoador = p.tipoSanguineo " +
+            "JOIN Pessoa p ON p.tipoSanguineo = d.tipoSanguineoDoador " +
             "WHERE p.importacao.id = :id " +
+            "AND YEAR(CURRENT_DATE()) - YEAR(p.dataNascimento) BETWEEN 16 AND 69 " +
+            "AND p.peso > 50 " +
             "GROUP BY t.sorotipagem")
     List<DoadoresPorReceptorDTO> calcularQuantidadeDePossiveisDoadoresParaCadaTipoSanguineo(@Param("id") Long id);
 
