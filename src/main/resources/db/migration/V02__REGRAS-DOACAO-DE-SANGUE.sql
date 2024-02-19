@@ -11,7 +11,7 @@ INSERT INTO tipo_sanguineo (id_tipo_sanguineo,sorotipagem) VALUES (8,'O-');
 -- A+ pode doar para AB+ e A+
 INSERT INTO doacao (ID_TIPO_SANGUINEO_DOADOR, ID_TIPO_SANGUINEO_RECEPTOR) VALUES
                                                                               (1, 1), -- A+ para A+
-                                                                              (1, 4); -- A+ para AB+
+                                                                              (1, 5); -- A+ para AB+
 
 -- A- pode doar para A+, A-, AB+ e AB-
 INSERT INTO doacao (ID_TIPO_SANGUINEO_DOADOR, ID_TIPO_SANGUINEO_RECEPTOR) VALUES
@@ -23,6 +23,13 @@ INSERT INTO doacao (ID_TIPO_SANGUINEO_DOADOR, ID_TIPO_SANGUINEO_RECEPTOR) VALUES
 INSERT INTO doacao (ID_TIPO_SANGUINEO_DOADOR, ID_TIPO_SANGUINEO_RECEPTOR) VALUES
                                                                               (3, 3), -- B+ para B+
                                                                               (3, 5); -- B+ para AB+
+
+-- B- pode doar para B+, B-, AB+ e AB-
+INSERT INTO doacao (ID_TIPO_SANGUINEO_DOADOR, ID_TIPO_SANGUINEO_RECEPTOR) VALUES
+                                                                              (4, 3), -- B- para B+
+                                                                              (4, 4), -- B- para B-
+                                                                              (4, 5), -- B- para AB+
+                                                                              (4, 6); -- B- para AB-
 
 -- AB+ pode doar para AB+
 INSERT INTO doacao (ID_TIPO_SANGUINEO_DOADOR, ID_TIPO_SANGUINEO_RECEPTOR) VALUES
