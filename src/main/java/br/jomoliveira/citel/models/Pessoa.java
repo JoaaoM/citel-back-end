@@ -3,14 +3,18 @@ package br.jomoliveira.citel.models;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Date;
 
 @Table(name="pessoa")
 @Entity
 @Data
 @EqualsAndHashCode(of="id")
+@NoArgsConstructor
 public class Pessoa {
 
     @Id
@@ -28,7 +32,7 @@ public class Pessoa {
     private String rg;
 
     @Column(name = "DATA_NASC")
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
 
     @Column(name = "SEXO")
     private String sexo;
@@ -61,7 +65,7 @@ public class Pessoa {
     @JoinColumn(name="ID_IMPORTACAO")
     private Importacao importacao;
 
-    public Pessoa(String nome, String cpf, String rg, Date dataNascimento, String sexo, String mae, String pai, Float altura, Integer peso, TipoSanguineo tipoSanguineo, Endereco endereco, Telefone telefone, Importacao importacao) {
+    public Pessoa(String nome, String cpf, String rg, LocalDate dataNascimento, String sexo, String mae, String pai, Float altura, Integer peso, TipoSanguineo tipoSanguineo, Endereco endereco, Telefone telefone, Importacao importacao) {
         this.nome = nome;
         this.cpf = cpf;
         this.rg = rg;
@@ -76,5 +80,15 @@ public class Pessoa {
         this.telefone = telefone;
         this.importacao = importacao;
     }
-    public Pessoa(){}
+
+    public Float getImc(){
+        if(altura == null) return 0F;
+        if(peso == null) return 0F;
+        return peso/altura*altura;
+    }
+
+    public int getIdade() {
+        LocalDate hoje = LocalDate.now();
+        return Period.between(dataNascimento, hoje).getYears();
+    }
 }

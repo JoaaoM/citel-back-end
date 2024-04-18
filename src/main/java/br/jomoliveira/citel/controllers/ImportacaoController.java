@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/importacao")
+@RequestMapping("importacoes")
 public class ImportacaoController {
     private final ImportacaoService importacaoService;
     private final PessoaService pessoaService;
@@ -22,7 +22,7 @@ public class ImportacaoController {
         this.pessoaService = pessoaService;
     }
 
-    @PostMapping()
+    @PostMapping
     @Transactional
     public ResponseEntity<String> importarPessoas(@RequestParam("jsonFile") MultipartFile file) {
         try {

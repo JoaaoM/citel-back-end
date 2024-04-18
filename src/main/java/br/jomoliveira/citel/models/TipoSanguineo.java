@@ -1,13 +1,17 @@
 package br.jomoliveira.citel.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "tipo_sanguineo")
 @Data
 @EqualsAndHashCode(of = "id")
+@NoArgsConstructor
+@AllArgsConstructor
 public class TipoSanguineo {
 
     @Id
@@ -18,8 +22,4 @@ public class TipoSanguineo {
     @Column(name = "sorotipagem")
     private String sorotipagem;
 
-    public TipoSanguineo (String sorotipagem){
-        this.sorotipagem = sorotipagem;
-    }
-    public TipoSanguineo () {};
 }
