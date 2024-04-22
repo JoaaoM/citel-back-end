@@ -1,4 +1,4 @@
 package br.jomoliveira.citel.dtos;
 
-public record MediaParaCadaTipoSanguineoDTO(String sorotipagem, Double media) {
+    public record MediaParaCadaTipoSanguineoDTO(String sorotipagem, Double media) {
 }

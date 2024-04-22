@@ -6,13 +6,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EnderecoService {
-
     public Endereco converterParaEntidade (PessoaDTO pessoaDTO){
         return new Endereco(
                 pessoaDTO.estado(),
                 pessoaDTO.cidade(),
                 pessoaDTO.bairro(),
-                pessoaDTO.endereco(), // rua
+                pessoaDTO.endereco(),
                 pessoaDTO.numero()
         );
     }

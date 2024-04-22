@@ -1,6 +1,6 @@
 package br.jomoliveira.citel.services;
 
-import br.jomoliveira.citel.dtos.PessoaDTO;
+import br.jomoliveira.citel.dtos.*;
 import br.jomoliveira.citel.models.Doacao;
 import br.jomoliveira.citel.models.Endereco;
 import br.jomoliveira.citel.models.Pessoa;
@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,28 +77,51 @@ public class PessoaService {
         return LocalDate.parse(data, formatter);
     }
 
-    public Map<String, Long> pessoaPorEstado(Long idImportacao) {
+    public List<CandidatosPorEstadoDTO> pessoaPorEstado(Long idImportacao) {
         return repository.buscarTodos(idImportacao).stream()
                 .map(Pessoa::getEndereco)
-                .collect(Collectors.groupingBy(Endereco::getEstado, Collectors.counting()));
+                .collect(Collectors.groupingBy(Endereco::getEstado, Collectors.counting()))
+                .entrySet().stream()
+                .map(entry -> new CandidatosPorEstadoDTO(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
     }
 
-    public Map<String, Long> calcularObesidadePorSexo(Long idImportacao) {
-        return repository.buscarTodos(idImportacao).stream()
-                .filter(pessoa -> pessoa.getImc() > IMC_OBESO)
-                .map(Pessoa::getSexo)
-                .collect(Collectors.groupingBy(Object::toString, Collectors.counting()));
+    public List<ObesidadePorSexoDTO> calcularObesidadePorSexo(Long idImportacao) {
+        List<Pessoa> populacaoTotal = repository.buscarTodos(idImportacao);
+
+        Map<String, Long> populacaoObesa = populacaoTotal.stream()
+                .filter(pessoa -> pessoa.getPeso() / (pessoa.getAltura() * pessoa.getAltura()) > IMC_OBESO)
+                .collect(Collectors.groupingBy(Pessoa::getSexo, Collectors.counting()));
+
+        Map<String, Long> populacaoTotalPorSexo = populacaoTotal.stream()
+                .collect(Collectors.groupingBy(Pessoa::getSexo, Collectors.counting()));
+
+        List<ObesidadePorSexoDTO> obesidadePorSexoDTOs = new ArrayList<>();
+
+        for (Map.Entry<String, Long> entry : populacaoTotalPorSexo.entrySet()) {
+            String sexo = entry.getKey();
+            Long populacaoTotalMap = entry.getValue();
+            Long populacaoObesaMap = populacaoObesa.getOrDefault(sexo, 0L);
+            double percentual = (double) populacaoObesaMap / populacaoTotalMap * 100;
+
+            ObesidadePorSexoDTO dto = new ObesidadePorSexoDTO(sexo, populacaoTotalMap, populacaoObesaMap, percentual);
+            obesidadePorSexoDTOs.add(dto);
+        }
+
+        return obesidadePorSexoDTOs;
     }
 
-    public Map<String, Double> mediaIdadeParaCadaTipoSanguineo(Long idImportacao) {
+    public List<MediaParaCadaTipoSanguineoDTO> mediaIdadeParaCadaTipoSanguineo(Long idImportacao) {
         return repository.buscarTodos(idImportacao).stream()
                 .collect(Collectors.groupingBy(
                         pessoa -> pessoa.getTipoSanguineo().getSorotipagem(),
                         Collectors.averagingDouble(Pessoa::getIdade)
-                ));
+                )).entrySet().stream()
+                .map(entry -> new MediaParaCadaTipoSanguineoDTO(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
     }
 
-    public Map<String, Double> calcularIMCMedioPorFaixaDeIdade(Long idImportacao) {
+    public List<ImcMedioPorFaixaEtariaDTO> calcularIMCMedioPorFaixaDeIdade(Long idImportacao) {
         return repository.buscarTodos(idImportacao).stream()
                 .collect(Collectors.groupingBy(
                         pessoa -> {
@@ -110,10 +130,11 @@ public class PessoaService {
                             return faixaDeIdade + "-" + (faixaDeIdade + 9);
                         },
                         Collectors.averagingDouble(Pessoa::getImc)
-                ));
+                )).entrySet().stream()
+                .map(entry -> new ImcMedioPorFaixaEtariaDTO(entry.getKey(), entry.getValue())).collect(Collectors.toList());
     }
 
-    public Map<String, Double> calcularQuantidadeDoadoresPorTipoSanguineo(Long idImportacao) {
+    public List<DoadoresPorReceptorDTO> calcularQuantidadeDoadoresPorTipoSanguineo(Long idImportacao) {
         List<Pessoa> pessoasDoadoras = repository.buscarTodos(idImportacao).stream()
                 .filter(pessoa -> pessoa.getIdade() >= IDADE_MINIMA && pessoa.getIdade() <= IDADE_MAXIMA && pessoa.getPeso() > PESO_MINIMO_PARA_DOACAO)
                 .toList();
@@ -134,6 +155,9 @@ public class PessoaService {
             }
         }
 
-        return quantidadeDoadoresPorTipoSanguineo;
+        return quantidadeDoadoresPorTipoSanguineo.entrySet()
+                .stream()
+                .map(entry -> new DoadoresPorReceptorDTO(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
     }
 }

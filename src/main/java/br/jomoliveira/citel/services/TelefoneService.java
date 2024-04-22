@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TelefoneService {
-
     public Telefone converterParaEntidade (PessoaDTO pessoaDTO){
         return new Telefone(
                 pessoaDTO.telefone_fixo(),

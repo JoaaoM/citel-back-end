@@ -7,13 +7,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TipoSanguineoService {
-
     private final TipoSanguineoRepository repository;
-
     public TipoSanguineoService(TipoSanguineoRepository repository) {
         this.repository = repository;
     }
-
     public TipoSanguineo findTipoSanguineo (String sorotipagem){
         return repository.findBySorotipagem(sorotipagem);
     }

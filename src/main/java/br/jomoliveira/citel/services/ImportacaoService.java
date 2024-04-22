@@ -2,6 +2,7 @@ package br.jomoliveira.citel.services;
 
 
 import br.jomoliveira.citel.dtos.DadosImportacaoDTO;
+import br.jomoliveira.citel.exceptions.ImportacaoException;
 import br.jomoliveira.citel.models.Importacao;
 import br.jomoliveira.citel.repositories.ImportacaoRepository;
 import org.springframework.stereotype.Service;
