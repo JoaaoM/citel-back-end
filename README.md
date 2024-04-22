@@ -27,6 +27,7 @@ Siga estas etapas para executar o aplicativo em sua máquina local:
 4. Inicie o aplicativo executando o comando: `docker-compose up -d`.
 5. Para parar o aplicativo e liberar recursos, execute o comando: `docker-compose down`.
 
+Agora execute o [front-end](https://github.com/JoaaoM/citel-angular)
 
 ## Autor
 
